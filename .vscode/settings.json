@@ -1,0 +1,13 @@
+{
+  "files.associations": {
+    "ostream": "cpp",
+    "random": "c",
+    "*.tcc": "c",
+    "cinttypes": "c",
+    "cmath": "c",
+    "complex": "c",
+    "cstdlib": "c",
+    "numeric": "c",
+    "ratio": "c"
+  }
+}
