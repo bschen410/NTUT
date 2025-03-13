@@ -8,6 +8,8 @@
     "complex": "c",
     "cstdlib": "c",
     "numeric": "c",
-    "ratio": "c"
+    "ratio": "c",
+    "stdio.h": "c",
+    "string.h": "c"
   }
 }
