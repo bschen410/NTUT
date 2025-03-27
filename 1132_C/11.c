@@ -2,26 +2,28 @@
 #include <stdio.h>
 #include <string.h>
 
-char G(int n, int k) {
+char *G(int n, int k) {
     char tmp[100] = {};
     if (n == 1 && k == 0) {
         return "0";
     } else if (n == 1 && k == 1) {
         return "1";
     } else if (k < pow(2, n - 1)) {
-        strcat(tmp, "0");
-        strcat(tmp, G(n - 1, k));
-        return tmp;
+        printf("0");
+        return G(n - 1, k);
     } else {
-        strcat(tmp, "1");
-        strcat(tmp, G(n - 1, pow(2, n) - 1 - k));
-        return tmp;
+        printf("1");
+        return G(n - 1, pow(2, n) - 1 - k);
     }
 }
 
 int main() {
-    int n, k;
-    scanf("%d %d", &n, &k);
-    printf("%s", G(4, 7));
+    while (1) {
+        int n, k;
+        scanf("%d", &n);
+        if (n == -1) break;
+        scanf("%d", &k);
+        printf("%s\n", G(n, k));
+    }
     return 0;
 }
