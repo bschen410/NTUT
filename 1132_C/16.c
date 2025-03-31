@@ -49,26 +49,54 @@ char *minus(char *x, char *y) {
 }
 
 char *multiply(char *x, char *y) {
+    int isNegX = (x[0] == '-');
+    int isNegY = (y[0] == '-');
+    if (isNegX) x++;
+    if (isNegY) y++;
+
+    int len_x = strlen(x);
+    int len_y = strlen(y);
+    int *temp = (int *)calloc(len_x + len_y, sizeof(int));  // 暫存結果
     char *ans = (char *)malloc(SIZE);
-    memset(ans, '0', SIZE);
-    int k;
-    ans[0] = (x[0] == '-' ^ y[0] == '-') ? '-' : '+';
-    for (int i = strlen(x) - 1; i >= 0 && isNum(x[i]); i--) {
-        int t = i - strlen(x) + 1;
-        for (int j = strlen(y) - 1; j >= 0 && isNum(y[i]); j--) {
-            int tmp = (x[i] - '0') * (y[j] - '0') * pow(10, t++);
-            for (k = i; tmp > 0; k++) {
-                ans[k] += (tmp % 10);
-                if (ans[k] > '9') {
-                    ans[k + 1] += (ans[k] - '0') / 10;
-                    ans[k] %= 10;
-                }
-                tmp /= 10;
-            }
+    memset(ans, 0, SIZE);
+
+    // 從低位開始逐位相乘
+    for (int i = len_x - 1; i >= 0; i--) {
+        for (int j = len_y - 1; j >= 0; j--) {
+            int mul = (x[i] - '0') * (y[j] - '0');
+            int pos_low = (len_x - 1 - i) + (len_y - 1 - j);
+            int pos_high = pos_low + 1;
+
+            temp[pos_low] += mul;                  // 加到低位
+            temp[pos_high] += temp[pos_low] / 10;  // 處理進位
+            temp[pos_low] %= 10;                   // 保留個位數
         }
     }
-    ans[k + 1] = '\0';
-    return reverse(ans);
+
+    // 將結果轉換為字串
+    int k = 0;
+    int start = len_x + len_y - 1;
+    while (start >= 0 && temp[start] == 0) {
+        start--;  // 移除前導零
+    }
+    if (start < 0) {
+        strcpy(ans, "0");  // 如果結果為 0
+    } else {
+        for (int i = start; i >= 0; i--) {
+            ans[k++] = temp[i] + '0';
+        }
+        ans[k] = '\0';
+    }
+
+    free(temp);  // 釋放暫存陣列
+    if (isNegX != isNegY) { // 如果符號不同，結果為負數
+        char *result = (char *)malloc(SIZE);
+        result[0] = '-';
+        strcpy(result + 1, ans);
+        free(ans);
+        return result;
+    }
+    return ans;
 }
 
 int main() {
