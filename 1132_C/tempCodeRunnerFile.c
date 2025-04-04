@@ -1,2 +1,4 @@
-3]);
-        // printf("%d ", ans[i][4]);
+] == -1) {
+        //     ans[index] = NULL;
+        //     break;
+        // }

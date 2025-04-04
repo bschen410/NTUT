@@ -1,100 +1,80 @@
-#include <ctype.h>
+#include <math.h>
 #include <stdio.h>
-typedef enum {
-    start,
-    negative,
-    integer,
-    build_number,
-    zero,
-    neg_zero,
-    point,
-    floating_point,
-    build_floating_point,
-    variable,
-    build_variable,
-    string
-} state_t;
-
-state_t next_state(state_t current_state, char c) {
-    if (current_state == start) {
-        if (c == '-') {
-            return negative;
-        } else if (c != '0' && isdigit(c)) {
-            return build_number;
-        } else if (c == '0') {
-            return zero;
-        } else if (isalpha(c) || c == '_') {
-            return build_variable;
-        }
-    } else if (current_state == build_number) {
-        if (isdigit(c)) {
-            return build_number;
-        } else if (c == '.') {
-            return point;
-        } else if (c == '\0') {
-            return integer;
-        }
-    } else if (current_state == zero) {
-        if (c == '.') {
-            return point;
-        } else if (c == '\0') {
-            return integer;
-        }
-    } else if (current_state == negative) {
-        if (c == '0') {
-            return neg_zero;
-        } else if (isdigit(c)) {
-            return build_number;
-        }
-    } else if (current_state == neg_zero) {
-        if (c == '.')
-            return point;
-    } else if (current_state == point) {
-        if (isdigit(c)) {
-            return build_floating_point;
-        }
-    } else if (current_state == build_floating_point) {
-        if (isdigit(c)) {
-            return build_floating_point;
-        } else if (c == '\0') {
-            return floating_point;
-        }
-    } else if (current_state == build_variable) {
-        if (isalpha(c) || isdigit(c) || c == '_') {
-            return build_variable;
-        } else if (c == '\0') {
-            return variable;
-        }
-    }
-    return string;
-}
-void detect_type() {
-    char str[100];
-    int index = 0;
-    scanf("%s", str);
-    state_t current_state = start;
-    do {
-        current_state = next_state(current_state, str[index]);
-        if (current_state == string && str[index] == '\0') {
-            printf("string\n");
-        } else if (current_state == integer) {
-            printf("integer\n");
-        } else if (current_state == floating_point) {
-            printf("float\n");
-        } else if (current_state == variable) {
-            if (index < 11)
-                printf("variable\n");
-            else
-                printf("string\n");
-        }
-    } while (str[index++] != '\0');
-}
-
-int main() {
-    int input_times;
-    scanf("%d", &input_times);
-    for (int i = 0; i < input_times; i++) {
-        detect_type();
+#include <stdlib.h>
+#include <string.h>
+int moreThan(int *sequence1, int *sequence2, int len) {
+    for (int i = 0; i < len; i++) {
+        if (sequence1[i] > sequence2[i]) return 1;
+        if (sequence1[i] < sequence2[i]) return 0;
     }
     return 0;
+}
+void sort(int **squence, int row, int len) {
+    int *temp;
+    for (int r = 1; r < row; r++) {
+        for (int i = 0; i < row - r; i++) {
+            if (moreThan(squence[i], squence[i + 1], len)) {
+                temp = squence[i];
+                squence[i] = squence[i + 1];
+                squence[i + 1] = temp;
+            }
+        }
+    }
+}
+int isEqualArray(int *a, int *b, int size) {
+    for (int i = 0; i < size; i++)
+        if (a[i] != b[i]) return 0;
+    return 1;
+}
+int main() {
+    int elements;
+    scanf("%d ", &elements);
+    // write array to int
+    int *array = (int *)malloc(20 * sizeof(int));
+    char *input = (char *)malloc(40 * sizeof(char));
+    gets(input);
+    for (int i = 0; i < strlen(input); i += 2) {
+        array[i / 2] = input[i] - '0';
+    }
+    // convert to sequence
+    int **sequence = (int **)malloc(20 * sizeof(int *));
+    int index = strlen(input) / 2 - elements + 2;
+    int *temp = (int *)malloc(elements * sizeof(int));
+    int row = 0, invalid = 0, totalSeq = 0;
+    for (int i = 0; i < index; i++) {
+        for (int e = 0; e < elements; e++) {
+            temp[e] = array[i + e];
+        }
+        // check repeated element
+        for (int m = 0; m < elements - 1; m++) {
+            for (int n = m + 1; n < elements; n++) {
+                if (temp[m] == temp[n]) invalid = 1;
+            }
+        }
+        // calculate total seqs
+        if (!invalid) totalSeq++;
+        // check repeated row
+        for (int j = 0; j < row; j++) {
+            if (isEqualArray(sequence[j], temp, elements)) invalid = 1;
+        }
+        // copy to sequence if valid
+        if (invalid) {
+            invalid = 0;
+            continue;
+        }
+        sequence[row] = (int *)malloc(elements * sizeof(int));
+        for (int e = 0; e < elements; e++)
+            sequence[row][e] = temp[e];
+        row++;
+    }
+    // sort
+    sort(sequence, row, elements);
+    // printer
+    printf("%d\n", totalSeq);
+    for (int r = 0; r < row; r++) {
+        for (int i = 0; i < elements; i++) {
+            printf("%d ", sequence[r][i]);
+        }
+        printf("\n");
+    }
 }

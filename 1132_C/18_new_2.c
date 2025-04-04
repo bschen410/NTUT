@@ -26,25 +26,29 @@ int *inputSeq() {
     return seq;
 }
 
+int check(int *seq, int idx) {
+    for (int i = 0; i < dispersion; i++) {
+        for (int j = i + 1; j < dispersion; j++) {
+            if (seq[idx + i] == seq[idx + j]) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
 int **checkDispersion(int *seq) {
     int index = 0;
     int **ans = (int **)malloc(sizeof(int *) * SIZE);
     for (int i = 0; i < SIZE; i++) {
         ans[i] = NULL;  // initialize to NULL
     }
-    for (int i = 0; seq[i + dispersion - 1] != -1 && seq[i + dispersion - 1] != '\0'; i++) {
-        int isDis = 1;
-        for (int j = 0; j < dispersion; j++) {
-            // printf("i: %d; j: %d\n", i, j);
-            for (int k = j + 1; k < dispersion; k++) {
-                if (seq[i + j] == seq[i + k]) {
-                    isDis = 0;
-                    break;
-                }
-            }
-            // if (!isDis) break;
+    for (int i = 0; i < SIZE; i++) {
+        if (seq[i+dispersion-1] == -1) {
+            ans[index] = NULL;
+            break;
         }
-        if (isDis) {
+        if (check(seq, i)) {
             ans[index] = (int *)malloc(sizeof(int) * dispersion);
             for (int j = 0; j < dispersion; j++) {
                 ans[index][j] = seq[i + j];
@@ -99,9 +103,9 @@ int main() {
     int count = 0;
     scanf("%d", &dispersion);
     int *seq = inputSeq();
-    for (int i = 0; seq[i] != '\0'; i++) {
-        printf("%d ", seq[i]);
-    }
+    // for (int i = 0; seq[i] != '\0'; i++) {
+    //     printf("%d ", seq[i]);
+    // }
     int **ans = checkDispersion(seq);
     for (int i = 0; ans[i] != NULL; i++) count++;
     sortAns(ans);
