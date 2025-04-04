@@ -1,20 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "test.c"
-
-typedef struct {
-    int isNegative;
-    int *digitArray;
-    char *repr;
-} longInt;
-
-longInt subtract(longInt a, longInt b);
-longInt strToLongInt(char *str);
-longInt add(longInt a, longInt b);
-longInt subtract(longInt a, longInt b);
-longInt multiply(longInt a, longInt b);
-
+#include "test.h"
 
 int main() {
     char input1[201], input2[201];
