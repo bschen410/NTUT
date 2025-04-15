@@ -20,7 +20,7 @@ void dealWithInput(char *input, Fraction *f) {
 }
 
 void mixedToFraction(Fraction *f) {
-    if (f->inte < 0) f->nume *= -1
+    if (f->inte < 0) f->nume *= -1;
     f->nume += f->inte * f->deno;
     f->inte = 0;
 }
