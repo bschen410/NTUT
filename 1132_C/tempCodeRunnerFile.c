@@ -1,3 +1,1 @@
-3) {
-                //     printf("%d %d %d\n", i, j, ans[i][j]);
-                // }
+i + LINK >= 0 && j >= 0
