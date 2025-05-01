@@ -1,15 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
-int myStrlen(char *str) {
-    int len = 0;
-    while (*str != '\0') {
-        len++;
-        str++;
-    }
-    return len;
-}
-
 int main() {
-    printf("%d\n", myStrlen("123456"));
+    printf("Bright sun! shines, Sun. and sun\n");
+    printf("Bright sun! shines, Sun. and sun\n");
+    printf("Bright sun! shines, Sun. and sun\n");
+    return 0;
 }

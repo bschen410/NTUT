@@ -1,7 +1,8 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define SIZE 100
+#define SIZE 200
 
 char **split(char *input) {
     char **result = (char **)malloc(SIZE * sizeof(char *));
@@ -21,7 +22,6 @@ char **split(char *input) {
     }
     result[j][k] = '\0';
     result[j + 1] = NULL;
-    // for (int i = 0; result[i]; i++) printf("%s\n", result[i]);
     return result;
 }
 
@@ -29,10 +29,11 @@ char *replace(char **words, char *str1, char *str2) {
     char *result = (char *)malloc(SIZE);
     memset(result, '\0', SIZE);
     int i = 0, j = 0, k = 0;
-    int len1 = strlen(str1) - 1;
-    int len2 = strlen(str2) - 1;
+    int len1 = strlen(str1);
+    int len2 = strlen(str2);
     while (words[i] != NULL) {
-        if (strncmp(words[i], str1, len1) == 0) {
+        if ((strlen(words[i]) - 1 == len1 && !isalpha(words[i][strlen(words[i]) - 1]) && strncmp(words[i], str1, len1) == 0) ||
+            (strlen(words[i]) == len1 && strncmp(words[i], str1, len1) == 0)) {
             strncpy(&result[k], str2, len2);
             k += len2;
             for (int s = 0; s < (strlen(words[i]) - len1); s++) {
@@ -47,17 +48,19 @@ char *replace(char **words, char *str1, char *str2) {
         i++;
     }
     result[k - 1] = '\0';
-    return result;
+    printf("%s\n", result);
+    // return result;
 }
 
 char *insert_front(char **words, char *str1, char *str2) {
     char *result = (char *)malloc(SIZE);
     memset(result, '\0', SIZE);
     int i = 0, j = 0, k = 0;
-    int len1 = strlen(str1) - 1;
-    int len2 = strlen(str2) - 1;
+    int len1 = strlen(str1);
+    int len2 = strlen(str2);
     while (words[i] != NULL) {
-        if (strncmp(words[i], str1, len1) == 0) {
+        if ((strlen(words[i]) - 1 == len1 && !isalpha(words[i][strlen(words[i]) - 1]) && strncmp(words[i], str1, len1) == 0) ||
+            (strlen(words[i]) == len1 && strncmp(words[i], str1, len1) == 0)) {
             strncpy(&result[k], str2, len2);
             k += len2;
             result[k++] = ' ';
@@ -72,17 +75,19 @@ char *insert_front(char **words, char *str1, char *str2) {
         i++;
     }
     result[k - 1] = '\0';
-    return result;
+    printf("%s\n", result);
+    // return result;
 }
 
 char *insert_back(char **words, char *str1, char *str2) {
     char *result = (char *)malloc(SIZE);
     memset(result, '\0', SIZE);
     int i = 0, j = 0, k = 0;
-    int len1 = strlen(str1) - 1;
-    int len2 = strlen(str2) - 1;
+    int len1 = strlen(str1);
+    int len2 = strlen(str2);
     while (words[i] != NULL) {
-        if (strncmp(words[i], str1, len1) == 0) {
+        if ((strlen(words[i]) - 1 == len1 && !isalpha(words[i][strlen(words[i]) - 1]) && strncmp(words[i], str1, len1) == 0) ||
+            (strlen(words[i]) == len1 && strncmp(words[i], str1, len1) == 0)) {
             strncpy(&result[k], words[i], strlen(words[i]));
             k += strlen(words[i]);
             result[k++] = ' ';
@@ -97,17 +102,19 @@ char *insert_back(char **words, char *str1, char *str2) {
         i++;
     }
     result[k - 1] = '\0';
-    return result;
+    printf("%s\n", result);
+    // return result;
 }
 
 char *removeWord(char **words, char *str1, char *str2) {
     char *result = (char *)malloc(SIZE);
     memset(result, '\0', SIZE);
     int i = 0, j = 0, k = 0;
-    int len1 = strlen(str1) - 1;
-    int len2 = strlen(str2) - 1;
+    int len1 = strlen(str1);
+    int len2 = strlen(str2);
     while (words[i] != NULL) {
-        if (strncmp(words[i], str1, len1) == 0) {
+        if ((strlen(words[i]) - 1 == len1 && !isalpha(words[i][strlen(words[i]) - 1]) && strncmp(words[i], str1, len1) == 0) ||
+            (strlen(words[i]) == len1 && strncmp(words[i], str1, len1) == 0)) {
             //
         } else {
             strncpy(&result[k], words[i], strlen(words[i]));
@@ -117,7 +124,8 @@ char *removeWord(char **words, char *str1, char *str2) {
         i++;
     }
     result[k - 1] = '\0';
-    return result;
+    printf("%s\n", result);
+    // return result;
 }
 
 char *reverse(char **words) {
@@ -130,7 +138,8 @@ char *reverse(char **words) {
         strcat(result, words[len]);
         strcat(result, " ");
     }
-    return result;
+    printf("%s\n", result);
+    // return result;
 }
 
 int main() {
@@ -139,11 +148,13 @@ int main() {
     fgets(str1, SIZE, stdin);
     fgets(str2, SIZE, stdin);
     words[strcspn(words, "\n")] = '\0';
+    str1[strcspn(str1, "\n")] = '\0';
+    str2[strcspn(str2, "\n")] = '\0';
     char **sep_words = split(words);
-    printf("%s\n", replace(sep_words, str1, str2));
-    printf("%s\n", insert_front(sep_words, str1, str2));
-    printf("%s\n", insert_back(sep_words, str1, str2));
-    printf("%s\n", removeWord(sep_words, str1, str2));
-    printf("%s\n", reverse(sep_words));
+    replace(sep_words, str1, str2);
+    insert_front(sep_words, str1, str2);
+    insert_back(sep_words, str1, str2);
+    removeWord(sep_words, str1, str2);
+    reverse(sep_words);
     return 0;
 }

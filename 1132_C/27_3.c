@@ -1,7 +1,8 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define SIZE 100
+#define SIZE 200
 
 char **split(char *input) {
     char **result = (char **)malloc(SIZE * sizeof(char *));
@@ -26,13 +27,15 @@ char **split(char *input) {
 }
 
 char *replace(char **words, char *str1, char *str2) {
-    char *result = (char *)malloc(SIZE);
+    // char *result = (char *)malloc(SIZE);
+    char result[SIZE];
     memset(result, '\0', SIZE);
     int i = 0, j = 0, k = 0;
     int len1 = strlen(str1) - 1;
     int len2 = strlen(str2) - 1;
     while (words[i] != NULL) {
-        if (strncmp(words[i], str1, len1) == 0) {
+        if ((strlen(words[i]) + 1 == len1 && !isalpha(words[i][strlen(words[i])]) && strncmp(words[i], str1, len1) == 0) ||
+            (strlen(words[i]) == len1 && strncmp(words[i], str1, len1) == 0)) {
             strncpy(&result[k], str2, len2);
             k += len2;
             for (int s = 0; s < (strlen(words[i]) - len1); s++) {
@@ -47,17 +50,20 @@ char *replace(char **words, char *str1, char *str2) {
         i++;
     }
     result[k - 1] = '\0';
-    return result;
+    printf("%s\n", result);
+    // return result;
 }
 
 char *insert_front(char **words, char *str1, char *str2) {
-    char *result = (char *)malloc(SIZE);
+    // char *result = (char *)malloc(SIZE);
+    char result[SIZE];
     memset(result, '\0', SIZE);
     int i = 0, j = 0, k = 0;
     int len1 = strlen(str1) - 1;
     int len2 = strlen(str2) - 1;
     while (words[i] != NULL) {
-        if (strncmp(words[i], str1, len1) == 0) {
+        if ((strlen(words[i]) + 1 == len1 && !isalpha(words[i][strlen(words[i])]) && strncmp(words[i], str1, len1) == 0) ||
+            (strlen(words[i]) == len1 && strncmp(words[i], str1, len1) == 0)) {
             strncpy(&result[k], str2, len2);
             k += len2;
             result[k++] = ' ';
@@ -72,17 +78,20 @@ char *insert_front(char **words, char *str1, char *str2) {
         i++;
     }
     result[k - 1] = '\0';
-    return result;
+    printf("%s\n", result);
+    // return result;
 }
 
 char *insert_back(char **words, char *str1, char *str2) {
-    char *result = (char *)malloc(SIZE);
+    // char *result = (char *)malloc(SIZE);
+    char result[SIZE];
     memset(result, '\0', SIZE);
     int i = 0, j = 0, k = 0;
     int len1 = strlen(str1) - 1;
     int len2 = strlen(str2) - 1;
     while (words[i] != NULL) {
-        if (strncmp(words[i], str1, len1) == 0) {
+        if ((strlen(words[i]) + 1 == len1 && !isalpha(words[i][strlen(words[i])]) && strncmp(words[i], str1, len1) == 0) ||
+            (strlen(words[i]) == len1 && strncmp(words[i], str1, len1) == 0)) {
             strncpy(&result[k], words[i], strlen(words[i]));
             k += strlen(words[i]);
             result[k++] = ' ';
@@ -97,17 +106,20 @@ char *insert_back(char **words, char *str1, char *str2) {
         i++;
     }
     result[k - 1] = '\0';
-    return result;
+    printf("%s\n", result);
+    // return result;
 }
 
 char *removeWord(char **words, char *str1, char *str2) {
-    char *result = (char *)malloc(SIZE);
+    // char *result = (char *)malloc(SIZE);
+    char result[SIZE];
     memset(result, '\0', SIZE);
     int i = 0, j = 0, k = 0;
     int len1 = strlen(str1) - 1;
     int len2 = strlen(str2) - 1;
     while (words[i] != NULL) {
-        if (strncmp(words[i], str1, len1) == 0) {
+        if ((strlen(words[i]) + 1 == len1 && !isalpha(words[i][strlen(words[i])]) && strncmp(words[i], str1, len1) == 0) ||
+            (strlen(words[i]) == len1 && strncmp(words[i], str1, len1) == 0)) {
             //
         } else {
             strncpy(&result[k], words[i], strlen(words[i]));
@@ -117,7 +129,8 @@ char *removeWord(char **words, char *str1, char *str2) {
         i++;
     }
     result[k - 1] = '\0';
-    return result;
+    printf("%s\n", result);
+    // return result;
 }
 
 char *reverse(char **words) {
@@ -130,7 +143,9 @@ char *reverse(char **words) {
         strcat(result, words[len]);
         strcat(result, " ");
     }
-    return result;
+
+    printf("%s\n", result);
+    // return result;
 }
 
 int main() {
