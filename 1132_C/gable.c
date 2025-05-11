@@ -1,80 +1,47 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-int moreThan(int *sequence1, int *sequence2, int len) {
-    for (int i = 0; i < len; i++) {
-        if (sequence1[i] > sequence2[i]) return 1;
-        if (sequence1[i] < sequence2[i]) return 0;
-    }
-    return 0;
+
+int a;
+double f1(double x) { return sqrt(a - x * x); }
+double f2(double x) { return (a * pow(x, 3) + 7 * x) / sqrt(a + x); }
+
+void integral(double (*fptr)(double), double p, double q, double err) {
+    int n = 2;
+    double sum = 0.0;
+    double h;
+    double before, after;
+    for (int i = 1; i < n; i++) sum += (*fptr)(p + i * ((q - p) * 1.0 / n));
+    before = (q - p) * 1.0 / (2 * 2) * ((*fptr)(p) + (*fptr)(q) + 2 * sum);
+    double estimated_error;
+    double target_error = pow(10, -err);
+
+    do {
+        sum = 0.0;
+        n *= 2;
+        after = ((*fptr)(p) + (*fptr)(q));
+        for (int i = 1; i < n; i++) after += 2.0 * (*fptr)(p + i * ((q - p) * 1.0) / n);
+        after = after * (((q - p) * 1.0 / n) / 2);
+        estimated_error = fabs(after - before);
+        printf("err:%.16f, %.12f\n", estimated_error, after);
+        before = after;
+    } while (estimated_error > target_error);
+    printf("result:%.12f\n", after);
 }
-void sort(int **squence, int row, int len) {
-    int *temp;
-    for (int r = 1; r < row; r++) {
-        for (int i = 0; i < row - r; i++) {
-            if (moreThan(squence[i], squence[i + 1], len)) {
-                temp = squence[i];
-                squence[i] = squence[i + 1];
-                squence[i + 1] = temp;
-            }
-        }
-    }
-}
-int isEqualArray(int *a, int *b, int size) {
-    for (int i = 0; i < size; i++)
-        if (a[i] != b[i]) return 0;
-    return 1;
-}
+
 int main() {
-    int elements;
-    scanf("%d ", &elements);
-    // write array to int
-    int *array = (int *)malloc(20 * sizeof(int));
-    char *input = (char *)malloc(40 * sizeof(char));
-    gets(input);
-    for (int i = 0; i < strlen(input); i += 2) {
-        array[i / 2] = input[i] - '0';
-    }
-    // convert to sequence
-    int **sequence = (int **)malloc(20 * sizeof(int *));
-    int index = strlen(input) / 2 - elements + 2;
-    int *temp = (int *)malloc(elements * sizeof(int));
-    int row = 0, invalid = 0, totalSeq = 0;
-    for (int i = 0; i < index; i++) {
-        for (int e = 0; e < elements; e++) {
-            temp[e] = array[i + e];
-        }
-        // check repeated element
-        for (int m = 0; m < elements - 1; m++) {
-            for (int n = m + 1; n < elements; n++) {
-                if (temp[m] == temp[n]) invalid = 1;
-            }
-        }
-        // calculate total seqs
-        if (!invalid) totalSeq++;
-        // check repeated row
-        for (int j = 0; j < row; j++) {
-            if (isEqualArray(sequence[j], temp, elements)) invalid = 1;
-        }
-        // copy to sequence if valid
-        if (invalid) {
-            invalid = 0;
-            continue;
-        }
-        sequence[row] = (int *)malloc(elements * sizeof(int));
-        for (int e = 0; e < elements; e++)
-            sequence[row][e] = temp[e];
-        row++;
-    }
-    // sort
-    sort(sequence, row, elements);
-    // printer
-    printf("%d\n", totalSeq);
-    for (int r = 0; r < row; r++) {
-        for (int i = 0; i < elements; i++) {
-            printf("%d ", sequence[r][i]);
-        }
-        printf("\n");
+    int funcType, p, q, err;
+    scanf(" %d", &funcType);
+    while (funcType != 0) {
+        if (funcType != 1 && funcType != 2)
+            printf("Invalid\n");
+        else
+            scanf(" %d %d %d %d", &a, &p, &q, &err);
+
+        if (funcType == 1)
+            integral(f1, p, q, err);
+        else if (funcType == 2)
+            integral(f2, p, q, err);
+        scanf(" %d", &funcType);
     }
 }
