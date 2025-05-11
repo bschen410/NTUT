@@ -2,24 +2,39 @@
 #include <stdio.h>
 
 double f1(double a, double x) {
-    return sqrt(a - x * x);
+    double val = a - x * x;
+    if (val < 0) return NAN;
+    return sqrt(val);
 }
 
 double f2(double a, double x) {
+    double val = a + x;
+    if (val < 0) return NAN;
     return (a * x * x * x + 7 * x) / sqrt(a + x);
 }
 
 double trapezoidal(double (*f)(double, double), double a, double p, double q, int err_digits) {
-    double n = 1;
+    int n = 1;
     double h, T_prev = 0, T_curr;
     double epsilon = pow(10, -err_digits);
 
     while (1) {
+        //
+        double fp = f(a, p);
+        double fq = f(a, q);
+        if (isnan(fp) || isnan(fq)) return NAN;
+        //
+
         h = (q - p) * 1.0 / n;
         double sum = 0.0;
 
         T_curr = f(a, p) + f(a, q);
         for (int i = 1; i < n; i++) {
+            //
+            double xi = p + i * h;
+            double fx = f(a, xi);
+            if (isnan(fx)) return NAN;
+            //
             T_curr += 2.0 * f(a, p + i * h);
             // double xi = p + i * h;
             // sum += f(a, xi);
@@ -31,7 +46,7 @@ double trapezoidal(double (*f)(double, double), double a, double p, double q, in
             break;
 
         T_prev = T_curr;
-        n *= 2.0;
+        n *= 2;
     }
 
     return T_curr;
