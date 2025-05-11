@@ -10,7 +10,8 @@ double f1(double a, double x) {
 double f2(double a, double x) {
     double val = a + x;
     if (val < 0) return NAN;
-    return (a * x * x * x + 7 * x) / sqrt(a + x);
+    // return (a * x * x * x + 7 * x) / sqrt(a + x);
+    return (a * pow(x, 3) + 7 * x) / sqrt(a + x);
 }
 
 double trapezoidal(double (*f)(double, double), double a, double p, double q, int err_digits) {
@@ -60,12 +61,13 @@ int main() {
             printf("Invalid\n");
             continue;
         }
-        double a, p, q;
+        int a, p, q;
         int err;
-        if (scanf(" %lf %lf %lf %d", &a, &p, &q, &err) != 4 || err <= 0) {
-            printf("Invalid\n");
-            continue;
-        }
+        scanf(" %d %d %d %d", &a, &p, &q, &err);
+        // if (scanf(" %lf %lf %lf %d", &a, &p, &q, &err) != 4 || err <= 0) {
+        //     printf("Invalid\n");
+        //     continue;
+        // }
 
         double result;
         if (choice == 1)
