@@ -9,7 +9,8 @@ typedef struct node {
 
 typedef struct operate {
     Node* head;
-    void (*empty)(struct operate*);
+    void (*queue_empty)(struct operate*);
+    void (*stack_empty)(struct operate*);
     void (*push)(struct operate*, int);
     void (*queue_pop)(struct operate*);
     void (*queue_front)(struct operate*);
@@ -19,7 +20,25 @@ typedef struct operate {
     void (*stack_print)(struct operate*);
 } Operate;
 
-void empty(Operate* list) {
+void queue_empty(Operate* list) {
+    if (list->head == NULL) {
+        printf("Queue is empty\n");
+        return;
+    }
+    Node* current = list->head;
+    while (current != NULL) {
+        Node* temp = current;
+        current = current->next;
+        free(temp);
+    }
+    list->head = NULL;
+}
+
+void stack_empty(Operate* list) {
+    if (list->head == NULL) {
+        printf("Stack is empty\n");
+        return;
+    }
     Node* current = list->head;
     while (current != NULL) {
         Node* temp = current;
@@ -127,7 +146,8 @@ void stack_print(Operate* list) {
 
 void initNode(Operate* list) {
     list->head = NULL;
-    list->empty = empty;
+    list->queue_empty = queue_empty;
+    list->stack_empty = stack_empty;
     list->push = push;
     list->queue_pop = queue_pop;
     list->queue_front = queue_front;
@@ -140,7 +160,7 @@ void initNode(Operate* list) {
 void execute(Operate* list, const char* op_type, const char* cmd, const char* data) {
     // printf("DEBUG: op_type=%s, cmd=%s, data=%s\n", op_type, cmd, data);
 
-    int value = atoi(data);
+    int value = data ? atoi(data) : -1;
     if (strcmp(op_type, "queue") == 0) {
         if (strcmp(cmd, "push") == 0)
             list->push(list, value);
@@ -151,7 +171,7 @@ void execute(Operate* list, const char* op_type, const char* cmd, const char* da
         else if (strcmp(cmd, "print") == 0)
             list->queue_print(list);
         else if (strcmp(cmd, "empty") == 0)
-            list->empty(list);
+            list->queue_empty(list);
     } else if (strcmp(op_type, "stack") == 0) {
         if (strcmp(cmd, "push") == 0)
             list->push(list, value);
@@ -162,7 +182,7 @@ void execute(Operate* list, const char* op_type, const char* cmd, const char* da
         else if (strcmp(cmd, "print") == 0)
             list->stack_print(list);
         else if (strcmp(cmd, "empty") == 0)
-            list->empty(list);
+            list->stack_empty(list);
     }
 }
 
@@ -191,7 +211,5 @@ int main() {
             execute(&queue, op_type, cmd, data);
     }
 
-    stack.empty(&stack);
-    queue.empty(&queue);
     return 0;
 }
